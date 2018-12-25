@@ -1,0 +1,56 @@
+
+
+scala => 用法
+https://blog.csdn.net/csfreebird/article/details/75212515
+
+10.1 =>
+
+这是个各种诡异用法的标记
+
+10.1.1 创建匿名函数
+
+=>右边是函数体，左边表示函数的参数类型.
+
+(x: Int) => x + 1   
+10.1.2 无参匿名函数
+
+() => T    
+相当于
+
+new Function0[T] //T是返回类型
+下面是示例代码
+
+scala> val f: () => Unit = () => { println("x")}
+f: () => Unit = <function0>
+scala> f()
+x
+
+scala> val f2: Function0[Unit] = () => println("x2")
+f: () => Unit = <function0>
+scala> f2()
+x2
+10.1.3 map函数中使用
+
+这个十分常用，尤其在Spark里对RDD等数据类型操作时。这里很像匿名函数的创建方式,其实是lambda表达式，不清楚两者是否有区别。
+
+List(1,2,3).map { (x: Int) => x * 2 }
+10.1.4 case 语句里面使用
+
+=>左边是匹配模式，右边是匹配成功后执行的表达式下面的v1形如Some(T), 需要将T提取出来。使用了match/case语句。
+
+v1 match {
+  case Some(value1) => println(value1)
+}
+10.1.5 名字传参
+
+类似与lisp，在函数执行时才对参数求值
+
+def f(x: => Int) = x * x
+// call it now
+var y = 0
+f { y += 1; y }
+// result like eval { y += 1; y } * { y += 1; y }
+2
+{y+=1;y} 并不特别，只是对y做了加1的操作，后面的;y没有起到任何修改y值的作用。 1 * 2 = 2。 就这么计算出来的。
+
+
